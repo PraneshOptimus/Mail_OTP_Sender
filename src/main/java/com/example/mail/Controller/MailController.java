@@ -2,32 +2,44 @@ package com.example.mail.Controller;
 
 
 import com.example.mail.Model.MailEntity;
+import com.example.mail.Model.OTP;
 import com.example.mail.Service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/send")
 public class MailController {
 
     @Autowired
     MailService mailService;
 
-    @PostMapping
+    @Autowired
+    OTP otpData;
+
+    @PostMapping("/sendOtp")
     public String sendMail(@RequestBody MailEntity mail){
-        int otp = new Random().nextInt(10000,100000);
-        String body = "Your Generated OTP is : ";
+
+        SecureRandom random = new SecureRandom();
+        String otp = String.valueOf(100000 + random.nextInt(900000));
+
+        otpData.setOtp(otp);
+        otpData.setCreatedAt(LocalDateTime.now());
+
+        String body = "Your Generated OTP is : "+otp+"\n\nNote :- \n* This Otp only valid for 5 Minutes *";
         String subject = "Verification for Email Testing ! ";
-        return mailService.mailTo(mail, body, subject, otp);
+
+        return mailService.mailTo(mail, body, subject);
     }
 
-
+    @PostMapping("/verifyOtp")
+    public String validateOtp(@RequestParam("otp") String userOtp){
+        return mailService.validate(otpData, userOtp);
+    }
 
 }
