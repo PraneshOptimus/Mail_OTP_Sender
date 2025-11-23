@@ -23,7 +23,7 @@ public class MailService {
     @Autowired
     JavaMailSender mailSender;
 
-    private final String admin = "a.pranesh19712005@gmail.com"; // Mail which is used to send the message from
+    private final String admin = ""; // Mail which is used to send the message from
 
     public String mailTo(MailEntity mail,String body, String subject){
         SimpleMailMessage message = new SimpleMailMessage();
@@ -50,3 +50,4 @@ public class MailService {
 
     }
 }
+
