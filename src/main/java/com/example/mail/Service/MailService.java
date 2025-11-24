@@ -44,10 +44,11 @@ public class MailService {
             return "OTP IS WRONG";
         }
 
-        if(minutes > 1) throw new OtpExpiredException("OTP Expired Try Agin ! ");
+        if(minutes > 5) throw new OtpExpiredException("OTP Expired Try Agin ! ");
 
         return "OTP IS VALID";
 
     }
 }
+
 
